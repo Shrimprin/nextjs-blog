@@ -109,11 +109,7 @@ export default function Home() {
             </p>
           </a>
 
-          <Link
-            href="/posts/first-post"
-            className={styles.card}
-            rel="noopener noreferrer"
-          >
+          <Link href="/posts/first-post" className={styles.card}>
             <h2>
               First Post <span>-&gt;</span>
             </h2>

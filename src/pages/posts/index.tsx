@@ -1,4 +1,5 @@
 import type { GetStaticProps, NextPage } from "next";
+import styles from "./index.module.css";
 
 type Post = {
   id: number;
@@ -26,10 +27,9 @@ const Home: NextPage<HomeProps> = ({ allPostsData }) => {
   return (
     <>
       {allPostsData?.map(({ id, title, date }) => (
-        <div key={id}>
-          <p>
-            date: {date}, title: {title}
-          </p>
+        <div key={id} className={styles.postContainer}>
+          <p className={styles.postDate}>{date}</p>
+          <p className={styles.postTitle}>{title}</p>
         </div>
       ))}
     </>

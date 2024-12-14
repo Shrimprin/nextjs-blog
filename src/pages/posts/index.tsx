@@ -1,4 +1,5 @@
 import type { GetStaticProps, NextPage } from "next";
+import Link from "next/link";
 import styles from "./index.module.css";
 
 type Post = {
@@ -32,6 +33,8 @@ const Home: NextPage<HomeProps> = ({ allPostsData }) => {
           <p className={styles.postTitle}>{title}</p>
         </div>
       ))}
+      <br />
+      <Link href="/">戻る</Link>
     </>
   );
 };

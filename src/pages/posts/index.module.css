@@ -1,0 +1,20 @@
+.postContainer {
+  width: 80%;
+  border: 1px solid #ccc;
+  margin: 10px auto;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.postTitle {
+  color: #333;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 5px 10px;
+}
+
+.postDate {
+  color: #666;
+  font-size: 0.9em;
+  margin: 5px 10px;
+}

@@ -115,6 +115,15 @@ export default function Home() {
             </h2>
             <p>プラクティス「ルーティングとページの作成」で作成したページへ</p>
           </Link>
+
+          <Link href="/posts" className={styles.card}>
+            <h2>
+              All Posts <span>-&gt;</span>
+            </h2>
+            <p>
+              プラクティス「プリレンダリングとデータの取得方法を理解する」で作成したページへ
+            </p>
+          </Link>
         </div>
       </main>
     </>

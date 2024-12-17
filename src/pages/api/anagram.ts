@@ -27,6 +27,10 @@ export default function handler(
     return res.status(400).json({ error: "不適切な入力です" });
   }
 
+  if (word.length > 8) {
+    return res.status(400).json({ error: "文字数は8文字以内としてください" });
+  }
+
   const anagrams = generateAnagrams(word);
   res.status(200).json({ anagrams });
 }

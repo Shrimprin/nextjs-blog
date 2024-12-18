@@ -124,6 +124,13 @@ export default function Home() {
               プラクティス「プリレンダリングとデータの取得方法を理解する」で作成したページへ
             </p>
           </Link>
+
+          <Link href="/anagram" className={styles.card}>
+            <h2>
+              Anagram <span>-&gt;</span>
+            </h2>
+            <p>プラクティス「APIを作成する」で作成したページへ</p>
+          </Link>
         </div>
       </main>
     </>

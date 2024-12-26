@@ -18,18 +18,24 @@ const Anagram: NextPage<{}> = () => {
   const [anagrams, setAnagrams] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchAnagrams: SubmitHandler<Inputs> = async (data: Inputs) => {
+  const fetchAnagrams = async (
+    word: string
+  ): Promise<AnagramResult | { error: string }> => {
+    const url = `/api/anagram?word=${word}`;
+    const response = await fetch(url);
+    return response.json();
+  };
+
+  const handleClickSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     setAnagrams([]);
     setError(null);
-    const url = `/api/anagram?word=${data.word}`;
     try {
-      const response = await fetch(url);
-      const data: AnagramResult | { error: string } = await response.json();
+      const anagramData = await fetchAnagrams(data.word);
 
-      if ("error" in data) {
-        setError(data.error);
+      if ("error" in anagramData) {
+        setError(anagramData.error);
       } else {
-        setAnagrams(data.anagrams);
+        setAnagrams(anagramData.anagrams);
       }
     } catch (err) {
       setError("データを取得できませんでした。");
@@ -40,7 +46,7 @@ const Anagram: NextPage<{}> = () => {
     <>
       <div className={styles.container}>
         <h1>アナグラム作成</h1>
-        <form onSubmit={handleSubmit(fetchAnagrams)}>
+        <form onSubmit={handleSubmit(handleClickSubmit)}>
           <div>
             <input
               type="text"

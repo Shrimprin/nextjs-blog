@@ -1,27 +1,29 @@
 import { NextPage } from "next";
 import { useState } from "react";
 import Link from "next/link";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { AnagramResult } from "./api/anagram";
 import styles from "./anagram.module.css";
 
 const Anagram: NextPage<{}> = () => {
-  const [word, setWord] = useState<string>("");
+  type Inputs = {
+    word: string;
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<Inputs>();
   const [anagrams, setAnagrams] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchAnagrams = async () => {
+  const fetchAnagrams: SubmitHandler<Inputs> = async (data: Inputs) => {
     setAnagrams([]);
     setError(null);
-    setIsLoading(true);
-
+    const url = `/api/anagram?word=${data.word}`;
     try {
-      if (!word) {
-        setError("文字を入力してください");
-        return;
-      }
-
-      const response = await fetch(`/api/anagram?word=${word}`);
+      const response = await fetch(url);
       const data: AnagramResult | { error: string } = await response.json();
 
       if ("error" in data) {
@@ -31,8 +33,6 @@ const Anagram: NextPage<{}> = () => {
       }
     } catch (err) {
       setError("データを取得できませんでした。");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -40,21 +40,35 @@ const Anagram: NextPage<{}> = () => {
     <>
       <div className={styles.container}>
         <h1>アナグラム作成</h1>
-        <input
-          type="text"
-          value={word}
-          onChange={(e) => setWord(e.target.value)}
-          placeholder="文字を入力してください"
-          className={styles.input}
-        />
-        <button
-          onClick={fetchAnagrams}
-          disabled={isLoading}
-          className={styles.button}
-        >
-          {isLoading ? "作成中..." : "作成"}
-        </button>
-        {error && <p className={styles.error}>{error}</p>}
+        <form onSubmit={handleSubmit(fetchAnagrams)}>
+          <div>
+            <input
+              type="text"
+              {...register("word", {
+                required: "文字を入力してください",
+                maxLength: {
+                  value: 8,
+                  message: "文字数は8文字以内としてください",
+                },
+              })}
+              placeholder="文字を入力してください"
+              className={styles.input}
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={styles.button}
+          >
+            {isSubmitting ? "作成中..." : "作成"}
+          </button>
+          {errors.word?.message && (
+            <p className={styles.error}>{errors.word?.message}</p>
+          )}
+          {error && <p className={styles.error}>{error}</p>}
+        </form>
+
         {anagrams.length > 0 && (
           <ul className={styles.anagramList}>
             {anagrams.map((anagram, index) => (

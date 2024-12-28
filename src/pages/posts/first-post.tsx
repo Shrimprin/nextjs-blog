@@ -6,13 +6,7 @@ const FirstPost: NextPage = () => {
   return (
     <>
       <h1>Hello, first post!</h1>
-      <Image
-        src="/images/neko.jpg"
-        layout="responsive"
-        width={737}
-        height={555}
-        alt="猫"
-      />
+      <Image src="/images/neko.jpg" width={737} height={555} alt="猫" />
       <br />
       <Link href="/">戻る</Link>
     </>

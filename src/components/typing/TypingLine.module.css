@@ -1,0 +1,15 @@
+.untypeText {
+  color: #999;
+}
+
+.typingText {
+  text-decoration: underline;
+}
+
+.correctTypedText {
+  background-color: #bbf7d0;
+}
+
+.incorrectTypedText {
+  background-color: #fecaca;
+}

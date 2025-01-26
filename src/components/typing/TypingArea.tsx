@@ -1,5 +1,4 @@
 import TypingLine from "./TypingLine";
-import { TypingStatus } from "@/types/typingStatus";
 
 type TypingAreaProps = {
   targetTextLines: string[];

@@ -18,14 +18,14 @@ const Typing: NextPage<{}> = () => {
   const [cursorPositions, setCursorPositions] = useState(
     initialCursorPositions
   );
-  const initialTypedTexts = targetTextLines.map((_, index) =>
+  const initialTypedTextLines = targetTextLines.map((_, index) =>
     " ".repeat(initialCursorPositions[index])
   );
-  const [typedTexts, setTypedTexts] = useState(initialTypedTexts);
+  const [typedTextLines, setTypedTextLines] = useState(initialTypedTextLines);
   const [typingStatus, setTypingStatus] = useState<TypingStatus>("idling");
   const [cursorLine, setCursorLine] = useState(0);
 
-  const typedText = typedTexts.slice(0, cursorLine + 1).join("");
+  const typedText = typedTextLines.slice(0, cursorLine + 1).join("");
   const correctTypedTextCount = typedText
     .split("")
     .filter((char, index) => char === targetText[index]).length;
@@ -45,16 +45,16 @@ const Typing: NextPage<{}> = () => {
       ) : typingStatus === "completed" ? (
         <Result
           targetTextLines={targetTextLines}
-          typedTexts={typedTexts}
+          typedTextLines={typedTextLines}
           accuracy={accuracy}
         />
       ) : (
         <>
           <TypingArea
             targetTextLines={targetTextLines}
-            typedTexts={typedTexts}
+            typedTextLines={typedTextLines}
             cursorPositions={cursorPositions}
-            setTypedTexts={setTypedTexts}
+            setTypedTextLines={setTypedTextLines}
             setCursorPositions={setCursorPositions}
             cursorLine={cursorLine}
             setCursorLine={setCursorLine}
@@ -62,9 +62,9 @@ const Typing: NextPage<{}> = () => {
           />
           <ResetButton
             setCursorLine={setCursorLine}
-            setTypedTexts={setTypedTexts}
+            setTypedTextLines={setTypedTextLines}
             setCursorPositions={setCursorPositions}
-            initialTypedTexts={initialTypedTexts}
+            initialTypedTextLines={initialTypedTextLines}
             initialCursorPositions={initialCursorPositions}
             setTypingStatus={setTypingStatus}
           />

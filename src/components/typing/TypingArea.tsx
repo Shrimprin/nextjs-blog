@@ -4,8 +4,8 @@ import { TypingStatus } from "@/types/typingStatus";
 
 type TypingAreaProps = {
   targetTextLines: string[];
-  typedTexts: string[];
-  setTypedTexts: (typedTexts: string[]) => void;
+  typedTextLines: string[];
+  setTypedTextLines: (typedTextLines: string[]) => void;
   cursorPositions: number[];
   setCursorPositions: (cursorPositions: number[]) => void;
   cursorLine: number;
@@ -15,8 +15,8 @@ type TypingAreaProps = {
 
 export default function TypingArea({
   targetTextLines,
-  typedTexts,
-  setTypedTexts,
+  typedTextLines,
+  setTypedTextLines,
   cursorPositions,
   setCursorPositions,
   cursorLine,
@@ -42,36 +42,36 @@ export default function TypingArea({
     newInputs: string[],
     newPositions: number[]
   ) => {
-    setTypedTexts(newInputs);
+    setTypedTextLines(newInputs);
     setCursorPositions(newPositions);
   };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      const newTypedTexts = [...typedTexts];
+      const newTypedTextLines = [...typedTextLines];
       const newCursorPositions = [...cursorPositions];
 
       if (e.key.length === 1) {
-        newTypedTexts[cursorLine] += e.key;
+        newTypedTextLines[cursorLine] += e.key;
         newCursorPositions[cursorLine] = Math.min(
           targetTextLines[cursorLine].length,
           cursorPositions[cursorLine] + 1
         );
       } else if (e.key === "Backspace") {
-        newTypedTexts[cursorLine] = typedTexts[cursorLine].slice(0, -1);
+        newTypedTextLines[cursorLine] = typedTextLines[cursorLine].slice(0, -1);
         newCursorPositions[cursorLine] = Math.max(
           0,
           cursorPositions[cursorLine] - 1
         );
       } else if (e.key === "Enter") {
-        newTypedTexts[cursorLine] += "\n";
+        newTypedTextLines[cursorLine] += "\n";
         newCursorPositions[cursorLine] = cursorPositions[cursorLine] + 1;
       } else if (e.key === "Tab") {
         e.preventDefault();
         return;
       }
 
-      updateInputsAndPositions(newTypedTexts, newCursorPositions);
+      updateInputsAndPositions(newTypedTextLines, newCursorPositions);
 
       if (isMoveToNextLine(newCursorPositions[cursorLine])) {
         setCursorLine(Math.min(targetTextLines.length - 1, cursorLine + 1));
@@ -91,14 +91,14 @@ export default function TypingArea({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [typedTexts, cursorPositions, cursorLine]);
+  }, [typedTextLines, cursorPositions, cursorLine]);
 
   return (
     <>
       {targetTextLines.map((targetTextLine, index) => (
         <TypingLine
           key={index}
-          typedText={typedTexts[index]}
+          typedText={typedTextLines[index]}
           targetTextLine={targetTextLine}
           cursorPosition={cursorPositions[index]}
           isActive={cursorLine >= index}

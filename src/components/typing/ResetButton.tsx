@@ -2,18 +2,18 @@ import { TypingStatus } from "@/types/typingStatus";
 
 type ResetButtonProps = {
   setCursorLine: (cursorLine: number) => void;
-  setTypedTexts: (typedTexts: string[]) => void;
+  setTypedTextLines: (typedTexts: string[]) => void;
   setCursorPositions: (cursorPositions: number[]) => void;
-  initialTypedTexts: string[];
+  initialTypedTextLines: string[];
   initialCursorPositions: number[];
   setTypingStatus: (typingStatus: TypingStatus) => void;
 };
 
 export default function ResetButton({
   setCursorLine,
-  setTypedTexts,
+  setTypedTextLines,
   setCursorPositions,
-  initialTypedTexts,
+  initialTypedTextLines,
   initialCursorPositions,
   setTypingStatus,
 }: ResetButtonProps) {
@@ -22,7 +22,7 @@ export default function ResetButton({
       <button
         onClick={() => {
           setCursorLine(0);
-          setTypedTexts(initialTypedTexts);
+          setTypedTextLines(initialTypedTextLines);
           setCursorPositions(initialCursorPositions);
           setTypingStatus("idling");
         }}

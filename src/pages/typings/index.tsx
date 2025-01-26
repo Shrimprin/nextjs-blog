@@ -53,8 +53,8 @@ const Typing: NextPage<{}> = () => {
           <TypingArea
             targetTextLines={targetTextLines}
             typedTextLines={typedTextLines}
-            cursorPositions={cursorPositions}
             setTypedTextLines={setTypedTextLines}
+            cursorPositions={cursorPositions}
             setCursorPositions={setCursorPositions}
             cursorLine={cursorLine}
             setCursorLine={setCursorLine}

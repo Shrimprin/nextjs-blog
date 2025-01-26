@@ -38,14 +38,6 @@ export default function TypingArea({
     );
   };
 
-  const updateInputsAndPositions = (
-    newInputs: string[],
-    newPositions: number[]
-  ) => {
-    setTypedTextLines(newInputs);
-    setCursorPositions(newPositions);
-  };
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const newTypedTextLines = [...typedTextLines];
@@ -71,7 +63,8 @@ export default function TypingArea({
         return;
       }
 
-      updateInputsAndPositions(newTypedTextLines, newCursorPositions);
+      setTypedTextLines(newTypedTextLines);
+      setCursorPositions(newCursorPositions);
 
       if (isMoveToNextLine(newCursorPositions[cursorLine])) {
         setCursorLine(Math.min(targetTextLines.length - 1, cursorLine + 1));

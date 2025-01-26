@@ -17,7 +17,7 @@ export default function Start({ startTyping }: StartProps) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [startTyping]);
 
   return <p>スペースキーでスタート</p>;
 }

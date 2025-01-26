@@ -18,21 +18,6 @@ export function useTyping({ targetTextLines }: useTypingProps) {
   const [typedTextLines, setTypedTextLines] = useState(initialTypedTextLines);
   const [cursorLine, setCursorLine] = useState(0);
 
-  const isMoveToNextLine = (newCursorPosition: number) => {
-    return newCursorPosition === targetTextLines[cursorLine].length;
-  };
-
-  const isMoveToPreviousLine = (newCursorPosition: number) => {
-    return newCursorPosition === 0;
-  };
-
-  const isComplete = (newCursorPositions: number[]) => {
-    return (
-      cursorLine === targetTextLines.length - 1 &&
-      newCursorPositions[cursorLine] === targetTextLines[cursorLine].length
-    );
-  };
-
   const [typingStatus, setTypingStatus] = useState<TypingStatus>("idling");
 
   const startTyping = () => {
@@ -48,6 +33,21 @@ export function useTyping({ targetTextLines }: useTypingProps) {
 
   useEffect(() => {
     if (typingStatus !== "typing") return;
+
+    const isMoveToNextLine = (newCursorPosition: number) => {
+      return newCursorPosition === targetTextLines[cursorLine].length;
+    };
+
+    const isMoveToPreviousLine = (newCursorPosition: number) => {
+      return newCursorPosition === 0;
+    };
+
+    const isComplete = (newCursorPositions: number[]) => {
+      return (
+        cursorLine === targetTextLines.length - 1 &&
+        newCursorPositions[cursorLine] === targetTextLines[cursorLine].length
+      );
+    };
 
     const handleKeyDown = (e: KeyboardEvent) => {
       const newTypedTextLines = [...typedTextLines];
@@ -94,7 +94,13 @@ export function useTyping({ targetTextLines }: useTypingProps) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [typedTextLines, cursorPositions, cursorLine, typingStatus]);
+  }, [
+    targetTextLines,
+    typedTextLines,
+    cursorPositions,
+    cursorLine,
+    typingStatus,
+  ]);
 
   return {
     typedTextLines,

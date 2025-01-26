@@ -1,5 +1,4 @@
 import { NextPage } from "next";
-import { useState } from "react";
 import TypingArea from "@/components/typing/TypingArea";
 import ResetButton from "@/components/typing/ResetButton";
 import Progress from "@/components/typing/Progress";
@@ -21,18 +20,6 @@ const Typing: NextPage<{}> = () => {
     targetTextLines,
   });
 
-  const typedText = typedTextLines.slice(0, cursorLine + 1).join("");
-  const correctTypedTextCount = typedText
-    .split("")
-    .filter((char, index) => char === targetText[index]).length;
-  const targetTextCount = targetText.length;
-  const typedTextCount = typedText.length;
-  const accuracy = parseFloat(
-    (
-      (typedTextCount > 0 ? correctTypedTextCount / typedTextCount : 1) * 100
-    ).toFixed(1)
-  );
-
   return (
     <div>
       <h1>タイピング</h1>
@@ -42,7 +29,6 @@ const Typing: NextPage<{}> = () => {
         <Result
           targetTextLines={targetTextLines}
           typedTextLines={typedTextLines}
-          accuracy={accuracy}
         />
       ) : (
         <>
@@ -54,9 +40,8 @@ const Typing: NextPage<{}> = () => {
           />
           <ResetButton resetTyping={resetTyping} />
           <Progress
-            typedTextCount={typedTextCount}
-            targetTextCount={targetTextCount}
-            accuracy={accuracy}
+            typedText={typedTextLines.slice(0, cursorLine + 1).join("")}
+            targetText={targetText}
           />
         </>
       )}

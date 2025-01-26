@@ -1,24 +1,22 @@
 import TypingLine from "./TypingLine";
+import Progress from "./Progress";
 
 type ResultProps = {
   targetTextLines: string[];
   typedTextLines: string[];
-  accuracy: number;
 };
 
 export default function Result({
   targetTextLines,
   typedTextLines,
-  accuracy,
 }: ResultProps) {
   return (
     <>
       <h2>結果</h2>
-      <p>
-        進捗: {typedTextLines.join("").length} /{" "}
-        {targetTextLines.join("").length}
-      </p>
-      <p>精度: {accuracy}%</p>
+      <Progress
+        typedText={typedTextLines.join("")}
+        targetText={targetTextLines.join("")}
+      />
       <div>
         {targetTextLines.map((targetTextLine, index) => (
           <TypingLine

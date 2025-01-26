@@ -1,4 +1,5 @@
 import { NextPage } from "next";
+import Link from "next/link";
 import TypingArea from "@/components/typing/TypingArea";
 import ResetButton from "@/components/typing/ResetButton";
 import Progress from "@/components/typing/Progress";
@@ -23,6 +24,7 @@ const Typing: NextPage<{}> = () => {
   return (
     <div>
       <h1>タイピング</h1>
+      <Link href="/">戻る</Link>
       {typingStatus === "idling" ? (
         <Start startTyping={startTyping} />
       ) : typingStatus === "completed" ? (

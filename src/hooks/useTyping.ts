@@ -1,27 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { TypingStatus } from "@/types/typingStatus";
 
 type useTypingProps = {
   targetTextLines: string[];
-  typedTextLines: string[];
-  setTypedTextLines: (typedTextLines: string[]) => void;
-  cursorPositions: number[];
-  setCursorPositions: (cursorPositions: number[]) => void;
-  cursorLine: number;
-  setCursorLine: (cursorLine: number) => void;
-  setTypingStatus: (typingStatus: TypingStatus) => void;
 };
 
-export function useTyping({
-  targetTextLines,
-  typedTextLines,
-  setTypedTextLines,
-  cursorPositions,
-  setCursorPositions,
-  cursorLine,
-  setCursorLine,
-  setTypingStatus,
-}: useTypingProps) {
+export function useTyping({ targetTextLines }: useTypingProps) {
+  const initialCursorPositions = targetTextLines.map((line) =>
+    line.indexOf(line.trimStart())
+  );
+  const [cursorPositions, setCursorPositions] = useState(
+    initialCursorPositions
+  );
+  const initialTypedTextLines = targetTextLines.map((_, index) =>
+    " ".repeat(initialCursorPositions[index])
+  );
+  const [typedTextLines, setTypedTextLines] = useState(initialTypedTextLines);
+  const [cursorLine, setCursorLine] = useState(0);
+
   const isMoveToNextLine = (newCursorPosition: number) => {
     return newCursorPosition === targetTextLines[cursorLine].length;
   };
@@ -37,7 +33,22 @@ export function useTyping({
     );
   };
 
+  const [typingStatus, setTypingStatus] = useState<TypingStatus>("idling");
+
+  const startTyping = () => {
+    setTypingStatus("typing");
+  };
+
+  const resetTyping = () => {
+    setCursorPositions(initialCursorPositions);
+    setTypedTextLines(initialTypedTextLines);
+    setCursorLine(0);
+    setTypingStatus("idling");
+  };
+
   useEffect(() => {
+    if (typingStatus !== "typing") return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       const newTypedTextLines = [...typedTextLines];
       const newCursorPositions = [...cursorPositions];
@@ -66,11 +77,11 @@ export function useTyping({
       setCursorPositions(newCursorPositions);
 
       if (isMoveToNextLine(newCursorPositions[cursorLine])) {
-        setCursorLine(Math.min(targetTextLines.length - 1, cursorLine + 1));
+        setCursorLine((prev) => Math.min(targetTextLines.length - 1, prev + 1));
       }
 
       if (isMoveToPreviousLine(newCursorPositions[cursorLine])) {
-        setCursorLine(Math.max(0, cursorLine - 1));
+        setCursorLine((prev) => Math.max(0, prev - 1));
       }
 
       if (isComplete(newCursorPositions)) {
@@ -83,5 +94,14 @@ export function useTyping({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [typedTextLines, cursorPositions, cursorLine]);
+  }, [typedTextLines, cursorPositions, cursorLine, typingStatus]);
+
+  return {
+    typedTextLines,
+    cursorPositions,
+    cursorLine,
+    typingStatus,
+    startTyping,
+    resetTyping,
+  };
 }

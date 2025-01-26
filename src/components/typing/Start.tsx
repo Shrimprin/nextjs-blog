@@ -1,15 +1,14 @@
 import { useEffect } from "react";
-import { TypingStatus } from "@/types/typingStatus";
 
 type StartProps = {
-  setTypingStatus: (typingStatus: TypingStatus) => void;
+  startTyping: () => void;
 };
 
-export default function Start({ setTypingStatus }: StartProps) {
+export default function Start({ startTyping }: StartProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === " ") {
-        setTypingStatus("typing");
+        startTyping();
       }
     };
 

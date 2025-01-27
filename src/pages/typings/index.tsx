@@ -8,7 +8,7 @@ import Start from "@/components/typing/Start";
 import { useTyping } from "@/hooks/useTyping";
 
 const Typing: NextPage<{}> = () => {
-  const targetText = "def fizz_buzz(num)\n  if num % 15 == 0\nend";
+  const targetText = "def hello_world\n  puts 'Hello, World!'\nend\n";
   const targetTextLines = targetText.split(/(?<=\n)/);
   const {
     typedTextLines,

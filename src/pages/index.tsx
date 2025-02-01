@@ -74,6 +74,13 @@ export default function Home() {
             </h2>
             <p>プラクティス「APIを作成する」で作成したページへ</p>
           </Link>
+
+          <Link href="/speciality-form" className={styles.card}>
+            <h2>
+              フォーム <span>-&gt;</span>
+            </h2>
+            <p>プラクティス「フォーム」で作成したページへ</p>
+          </Link>
         </div>
       </main>
     </>

@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NextPage } from "next";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -85,6 +86,7 @@ const SpecialtyForm: NextPage<{}> = () => {
         </div>
         <button type="submit">送信</button>
       </form>
+      <Link href="/">戻る</Link>
     </>
   );
 };

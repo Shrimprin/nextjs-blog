@@ -8,3 +8,4 @@ export enum SortOrder {
 export const sortOrderAtom = atom(SortOrder.Descending);
 
 export const wordAtom = atom<string>("");
+export const anagramsAtom = atom<string[]>([]);

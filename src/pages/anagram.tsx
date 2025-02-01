@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useAtom } from "jotai";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AnagramResult } from "./api/anagram";
-import { wordAtom } from "../atom";
+import { wordAtom, anagramsAtom } from "../atom";
 import styles from "./anagram.module.css";
 
 const Anagram: NextPage<{}> = () => {
@@ -17,7 +17,7 @@ const Anagram: NextPage<{}> = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<Inputs>();
-  const [anagrams, setAnagrams] = useState<string[]>([]);
+  const [anagrams, setAnagrams] = useAtom(anagramsAtom);
   const [error, setError] = useState<string | null>(null);
 
   const fetchAnagrams = async (

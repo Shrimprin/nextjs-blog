@@ -1,8 +1,10 @@
 import { NextPage } from "next";
 import { useState } from "react";
 import Link from "next/link";
+import { useAtom } from "jotai";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AnagramResult } from "./api/anagram";
+import { wordAtom } from "../atom";
 import styles from "./anagram.module.css";
 
 const Anagram: NextPage<{}> = () => {
@@ -42,6 +44,8 @@ const Anagram: NextPage<{}> = () => {
     }
   };
 
+  const [word, setWord] = useAtom(wordAtom);
+
   return (
     <>
       <div className={styles.container}>
@@ -56,9 +60,11 @@ const Anagram: NextPage<{}> = () => {
                   value: 8,
                   message: "文字数は8文字以内としてください",
                 },
+                onChange: (e) => setWord(e.target.value),
               })}
               placeholder="文字を入力してください"
               className={styles.input}
+              value={word}
             />
           </div>
 

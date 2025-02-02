@@ -3,7 +3,10 @@
 }
 
 .typingText {
-  text-decoration: underline;
+  border-bottom: 1px solid;
+  display: inline-block;
+  line-height: 1.35;
+  vertical-align: bottom;
 }
 
 .correctTypedText {

@@ -38,10 +38,6 @@ export function useTyping({ targetTextLines }: useTypingProps) {
       return newCursorPosition === targetTextLines[cursorLine].length;
     };
 
-    const isMoveToPreviousLine = (newCursorPosition: number) => {
-      return newCursorPosition === 0;
-    };
-
     const isComplete = (newCursorPositions: number[]) => {
       return (
         cursorLine === targetTextLines.length - 1 &&
@@ -61,28 +57,33 @@ export function useTyping({ targetTextLines }: useTypingProps) {
         );
       } else if (e.key === "Backspace") {
         newTypedTextLines[cursorLine] = typedTextLines[cursorLine].slice(0, -1);
-        newCursorPositions[cursorLine] = Math.max(
-          0,
-          cursorPositions[cursorLine] - 1
-        );
+        const newCursorPosition = cursorPositions[cursorLine] - 1;
+        if (newCursorPosition < 0) {
+          newTypedTextLines[cursorLine - 1] = typedTextLines[
+            cursorLine - 1
+          ].slice(0, -1);
+          newCursorPositions[cursorLine - 1] -= 1;
+          setCursorLine((prev) => Math.max(0, prev - 1));
+        } else {
+          newCursorPositions[cursorLine] = newCursorPosition;
+        }
       } else if (e.key === "Enter") {
         newTypedTextLines[cursorLine] += "\n";
-        newCursorPositions[cursorLine] = cursorPositions[cursorLine] + 1;
+        newCursorPositions[cursorLine] = Math.min(
+          targetTextLines[cursorLine].length,
+          cursorPositions[cursorLine] + 1
+        );
       } else if (e.key === "Tab") {
         e.preventDefault();
         return;
       }
 
-      setTypedTextLines(newTypedTextLines);
-      setCursorPositions(newCursorPositions);
-
       if (isMoveToNextLine(newCursorPositions[cursorLine])) {
         setCursorLine((prev) => Math.min(targetTextLines.length - 1, prev + 1));
       }
 
-      if (isMoveToPreviousLine(newCursorPositions[cursorLine])) {
-        setCursorLine((prev) => Math.max(0, prev - 1));
-      }
+      setTypedTextLines(newTypedTextLines);
+      setCursorPositions(newCursorPositions);
 
       if (isComplete(newCursorPositions)) {
         setTypingStatus("completed");

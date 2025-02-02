@@ -78,7 +78,7 @@ export function useTyping({ targetTextLines }: useTypingProps) {
           targetTextLines[cursorLine].length,
           cursorPositions[cursorLine] + 1
         );
-      } else if (e.key === "Tab") {
+      } else {
         e.preventDefault();
         return;
       }

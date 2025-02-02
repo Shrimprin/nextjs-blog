@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { TypingStatus } from "@/types/typingStatus";
 
 type useTypingProps = {
@@ -17,7 +17,6 @@ export function useTyping({ targetTextLines }: useTypingProps) {
   );
   const [typedTextLines, setTypedTextLines] = useState(initialTypedTextLines);
   const [cursorLine, setCursorLine] = useState(0);
-
   const [typingStatus, setTypingStatus] = useState<TypingStatus>("idling");
 
   const startTyping = () => {
@@ -31,21 +30,27 @@ export function useTyping({ targetTextLines }: useTypingProps) {
     setTypingStatus("idling");
   };
 
-  useEffect(() => {
-    if (typingStatus !== "typing") return;
-
-    const isMoveToNextLine = (newCursorPosition: number) => {
+  const isMoveToNextLine = useCallback(
+    (newCursorPosition: number) => {
       return newCursorPosition === targetTextLines[cursorLine].length;
-    };
+    },
+    [cursorLine, targetTextLines]
+  );
 
-    const isComplete = (newCursorPositions: number[]) => {
+  const isComplete = useCallback(
+    (newCursorPositions: number[]) => {
       return (
         cursorLine === targetTextLines.length - 1 &&
         newCursorPositions[cursorLine] === targetTextLines[cursorLine].length
       );
-    };
+    },
+    [cursorLine, targetTextLines]
+  );
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (typingStatus !== "typing") return;
+
       const newTypedTextLines = [...typedTextLines];
       const newCursorPositions = [...cursorPositions];
 
@@ -88,20 +93,25 @@ export function useTyping({ targetTextLines }: useTypingProps) {
       if (isComplete(newCursorPositions)) {
         setTypingStatus("completed");
       }
-    };
+    },
+    [
+      cursorLine,
+      cursorPositions,
+      targetTextLines,
+      typedTextLines,
+      typingStatus,
+      isMoveToNextLine,
+      isComplete,
+    ]
+  );
 
+  useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [
-    targetTextLines,
-    typedTextLines,
-    cursorPositions,
-    cursorLine,
-    typingStatus,
-  ]);
+  }, [handleKeyDown]);
 
   return {
     typedTextLines,

@@ -30,13 +30,6 @@ export function useTyping({ targetTextLines }: useTypingProps) {
     setTypingStatus("idling");
   };
 
-  const isMoveToNextLine = useCallback(
-    (newCursorPosition: number) => {
-      return newCursorPosition === targetTextLines[cursorLine].length;
-    },
-    [cursorLine, targetTextLines]
-  );
-
   const isComplete = useCallback(
     (newCursorPositions: number[]) => {
       return (
@@ -47,62 +40,80 @@ export function useTyping({ targetTextLines }: useTypingProps) {
     [cursorLine, targetTextLines]
   );
 
+  const handleCharacterInput = useCallback(
+    (character: string) => {
+      const newTypedTextLines = [...typedTextLines];
+      const newCursorPositions = [...cursorPositions];
+
+      newTypedTextLines[cursorLine] += character;
+      newCursorPositions[cursorLine] = Math.min(
+        targetTextLines[cursorLine].length,
+        cursorPositions[cursorLine] + 1
+      );
+      const newCursorLine =
+        newCursorPositions[cursorLine] === targetTextLines[cursorLine].length
+          ? Math.min(targetTextLines.length - 1, cursorLine + 1)
+          : cursorLine;
+
+      return { newTypedTextLines, newCursorPositions, newCursorLine };
+    },
+    [typedTextLines, cursorPositions, cursorLine, targetTextLines]
+  );
+
+  const handleBackspace = useCallback(() => {
+    const newTypedTextLines = [...typedTextLines];
+    const newCursorPositions = [...cursorPositions];
+    const backspacedCursorPosition = cursorPositions[cursorLine] - 1;
+    const newCursorLine =
+      backspacedCursorPosition < 0 ? Math.max(0, cursorLine - 1) : cursorLine;
+
+    // 最初の行かつ最初の文字の場合は何もしない
+    if (cursorLine === 0 && backspacedCursorPosition < 0) {
+      return { newTypedTextLines, newCursorPositions, newCursorLine };
+    }
+
+    newTypedTextLines[newCursorLine] = typedTextLines[newCursorLine].slice(
+      0,
+      -1
+    );
+    newCursorPositions[newCursorLine] =
+      backspacedCursorPosition < 0
+        ? newCursorPositions[newCursorLine] - 1
+        : backspacedCursorPosition;
+
+    return { newTypedTextLines, newCursorPositions, newCursorLine };
+  }, [typedTextLines, cursorPositions, cursorLine]);
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (typingStatus !== "typing") return;
 
-      const newTypedTextLines = [...typedTextLines];
-      const newCursorPositions = [...cursorPositions];
+      let result: {
+        newTypedTextLines: string[];
+        newCursorPositions: number[];
+        newCursorLine: number;
+      };
 
       if (e.key.length === 1) {
-        newTypedTextLines[cursorLine] += e.key;
-        newCursorPositions[cursorLine] = Math.min(
-          targetTextLines[cursorLine].length,
-          cursorPositions[cursorLine] + 1
-        );
-      } else if (e.key === "Backspace") {
-        newTypedTextLines[cursorLine] = typedTextLines[cursorLine].slice(0, -1);
-        const newCursorPosition = cursorPositions[cursorLine] - 1;
-        if (newCursorPosition < 0) {
-          newTypedTextLines[cursorLine - 1] = typedTextLines[
-            cursorLine - 1
-          ].slice(0, -1);
-          newCursorPositions[cursorLine - 1] -= 1;
-          setCursorLine((prev) => Math.max(0, prev - 1));
-        } else {
-          newCursorPositions[cursorLine] = newCursorPosition;
-        }
+        result = handleCharacterInput(e.key);
       } else if (e.key === "Enter") {
-        newTypedTextLines[cursorLine] += "\n";
-        newCursorPositions[cursorLine] = Math.min(
-          targetTextLines[cursorLine].length,
-          cursorPositions[cursorLine] + 1
-        );
+        result = handleCharacterInput("\n");
+      } else if (e.key === "Backspace") {
+        result = handleBackspace();
       } else {
         e.preventDefault();
         return;
       }
 
-      if (isMoveToNextLine(newCursorPositions[cursorLine])) {
-        setCursorLine((prev) => Math.min(targetTextLines.length - 1, prev + 1));
-      }
+      setTypedTextLines(result.newTypedTextLines);
+      setCursorPositions(result.newCursorPositions);
+      setCursorLine(result.newCursorLine);
 
-      setTypedTextLines(newTypedTextLines);
-      setCursorPositions(newCursorPositions);
-
-      if (isComplete(newCursorPositions)) {
+      if (isComplete(result.newCursorPositions)) {
         setTypingStatus("completed");
       }
     },
-    [
-      cursorLine,
-      cursorPositions,
-      targetTextLines,
-      typedTextLines,
-      typingStatus,
-      isMoveToNextLine,
-      isComplete,
-    ]
+    [typingStatus, handleCharacterInput, handleBackspace, isComplete]
   );
 
   useEffect(() => {

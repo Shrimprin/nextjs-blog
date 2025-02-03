@@ -1,11 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
 import { TypingStatus } from "@/types/typingStatus";
 
-type useTypingProps = {
+type useTypingHandlerProps = {
   targetTextLines: string[];
 };
 
-export function useTyping({ targetTextLines }: useTypingProps) {
+export function useTypingHandler({ targetTextLines }: useTypingHandlerProps) {
   const initialCursorPositions = targetTextLines.map((line) =>
     line.indexOf(line.trimStart())
   );

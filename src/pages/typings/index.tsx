@@ -5,7 +5,7 @@ import ResetButton from "@/components/typing/ResetButton";
 import Progress from "@/components/typing/Progress";
 import Result from "@/components/typing/Result";
 import Start from "@/components/typing/Start";
-import { useTyping } from "@/hooks/useTyping";
+import { useTypingHandler } from "@/hooks/useTypingHandler";
 
 const Typing: NextPage<{}> = () => {
   const targetText = "def hello_world\n  puts 'Hello, World!'\nend\n";
@@ -17,7 +17,7 @@ const Typing: NextPage<{}> = () => {
     typingStatus,
     startTyping,
     resetTyping,
-  } = useTyping({
+  } = useTypingHandler({
     targetTextLines,
   });
 

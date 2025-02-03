@@ -1,7 +1,7 @@
 import { act, fireEvent, renderHook } from "@testing-library/react";
-import { useTyping } from "@/hooks/useTyping";
+import { useTypingHandler } from "@/hooks/useTypingHandler";
 
-describe("useTyping", () => {
+describe("useTypingHandler", () => {
   const targetTextLines = [
     "def hello_world\n",
     "  puts 'Hello, World!'\n",
@@ -10,23 +10,31 @@ describe("useTyping", () => {
 
   describe("初期値", () => {
     it("行頭のスペースは入力済みであること", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       expect(result.current.typedTextLines).toEqual(["", "  ", ""]);
       expect(result.current.cursorPositions).toEqual([0, 2, 0]);
     });
 
     it("カーソル行が1行目であること", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       expect(result.current.cursorLine).toBe(0);
     });
 
     it("typingStatusがidlingであること", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       expect(result.current.typingStatus).toBe("idling");
     });
 
     it("キー入力してもタイピングできないこと", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       act(() => {
         fireEvent.keyDown(window, { key: "A" });
       });
@@ -36,7 +44,9 @@ describe("useTyping", () => {
     });
 
     it("タイピング開始できること", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       act(() => {
         result.current.startTyping();
       });
@@ -46,7 +56,9 @@ describe("useTyping", () => {
 
   describe("タイピング中", () => {
     it("キー入力できること", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       act(() => {
         result.current.startTyping();
       });
@@ -58,7 +70,9 @@ describe("useTyping", () => {
     });
 
     it("エンターキーを入力できること", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       act(() => {
         result.current.startTyping();
       });
@@ -70,7 +84,9 @@ describe("useTyping", () => {
     });
 
     it("バックスペースキーで入力を取り消せること", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       act(() => {
         result.current.startTyping();
       });
@@ -87,7 +103,9 @@ describe("useTyping", () => {
     });
 
     it("タブキーを入力できないこと", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       act(() => {
         result.current.startTyping();
       });
@@ -99,7 +117,9 @@ describe("useTyping", () => {
     });
 
     it("改行できること", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       act(() => {
         result.current.startTyping();
       });
@@ -130,7 +150,9 @@ describe("useTyping", () => {
     });
 
     it("バックスペースキーで改行を取り消せること", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       act(() => {
         result.current.startTyping();
       });
@@ -164,7 +186,9 @@ describe("useTyping", () => {
     });
 
     it("タイピング完了できること", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       act(() => {
         result.current.startTyping();
       });
@@ -191,7 +215,9 @@ describe("useTyping", () => {
     });
 
     it("リセットできること", () => {
-      const { result } = renderHook(() => useTyping({ targetTextLines }));
+      const { result } = renderHook(() =>
+        useTypingHandler({ targetTextLines })
+      );
       act(() => {
         result.current.startTyping();
       });

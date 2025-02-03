@@ -24,7 +24,7 @@ describe("useTypingHandler", () => {
       expect(result.current.cursorLine).toBe(0);
     });
 
-    it("typingStatusがidlingであること", () => {
+    it("typingStatus が idling であること", () => {
       const { result } = renderHook(() =>
         useTypingHandler({ targetTextLines })
       );

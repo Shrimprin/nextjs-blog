@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
-import { TypingStatus } from "@/types/typingStatus";
+
+type TypingStatus = "idling" | "typing" | "completed";
 
 type useTypingHandlerProps = {
   targetTextLines: string[];

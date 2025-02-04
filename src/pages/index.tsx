@@ -74,6 +74,13 @@ export default function Home() {
             </h2>
             <p>プラクティス「APIを作成する」で作成したページへ</p>
           </Link>
+
+          <Link href="/typings" className={styles.card}>
+            <h2>
+              Typing <span>-&gt;</span>
+            </h2>
+            <p>プラクティス「React Hooks」で作成したページへ</p>
+          </Link>
         </div>
       </main>
     </>
